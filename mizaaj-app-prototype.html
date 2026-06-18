@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Mizaaj — Roz ka Mix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF7F0;
+    --paper-dim:#F1ECE1;
+    --ink:#1A1A1A;
+    --ink-soft:#5C5750;
+    --saffron:#E8862E;
+    --saffron-dim:#FBE6CE;
+    --teal:#1F5C57;
+    --teal-dim:#E1ECE9;
+    --gold:#D4A857;
+    --line:#E4DDCB;
+    --card:#FFFFFF;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Manrope',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overscroll-behavior-y:contain;
+  }
+  .app{
+    max-width:430px;
+    margin:0 auto;
+    min-height:100vh;
+    position:relative;
+    background:var(--paper);
+    padding-bottom:78px;
+  }
+
+  /* ===== Masthead ===== */
+  .masthead{
+    padding:22px 20px 16px;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    position:sticky;
+    top:0;
+    z-index:30;
+  }
+  .masthead-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+  }
+  .brand{
+    font-family:'Fraunces',serif;
+    font-weight:780;
+    font-size:30px;
+    letter-spacing:-0.5px;
+    line-height:1;
+  }
+  .brand-dot{color:var(--saffron);}
+  .masthead-date{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    text-align:right;
+    line-height:1.5;
+  }
+  .digest-strip{
+    margin-top:14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--ink);
+    color:var(--paper);
+    border-radius:999px;
+    padding:7px 14px 7px 7px;
+    overflow:hidden;
+  }
+  .digest-icon{
+    width:26px;height:26px;
+    border-radius:50%;
+    background:var(--saffron);
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;
+    flex-shrink:0;
+    animation:cycle 6s infinite;
+  }
+  @keyframes cycle{
+    0%,30%{background:var(--saffron);}
+    33%,63%{background:var(--teal);}
+    66%,96%{background:var(--gold);}
+  }
+  .digest-text{
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:0.2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .digest-count{
+    margin-right:auto;
+    margin-left:auto;
+    opacity:0.6;
+    font-size:11px;
+  }
+
+  /* ===== Category chips ===== */
+  .chips{
+    display:flex;
+    gap:8px;
+    padding:14px 20px;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .chips::-webkit-scrollbar{display:none;}
+  .chip{
+    flex-shrink:0;
+    padding:7px 16px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink-soft);
+    background:var(--card);
+    white-space:nowrap;
+    cursor:pointer;
+    transition:all 0.2s;
+  }
+  .chip.active{
+    background:var(--ink);
+    color:var(--paper);
+    border-color:var(--ink);
+  }
+
+  /* ===== Feed ===== */
+  .feed{padding:4px 20px 8px;}
+
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    margin-bottom:16px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    box-shadow:0 1px 2px rgba(26,26,26,0.04);
+  }
+  .card-media{
+    height:170px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:46px;
+    position:relative;
+  }
+  .card-media.recipe{background:linear-gradient(135deg,#FBE6CE,#F4D2A0);}
+  .card-media.news{background:linear-gradient(135deg,#E1ECE9,#C7DBD6);}
+  .card-media.tip{background:linear-gradient(135deg,#EFE6D6,#E3D4B8);}
+  .card-tag{
+    position:absolute;
+    top:12px;left:12px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.4px;
+    text-transform:uppercase;
+    padding:5px 10px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.92);
+  }
+  .card-body{padding:16px 16px 18px;}
+  .card-title{
+    font-family:'Fraunces',serif;
+    font-weight:650;
+    font-size:19px;
+    line-height:1.3;
+    margin:0 0 6px;
+  }
+  .card-desc{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    line-height:1.5;
+    margin:0 0 10px;
+  }
+  .card-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:11.5px;
+    color:var(--ink-soft);
+  }
+  .card-meta-left{display:flex;gap:10px;align-items:center;}
+
+  /* ===== Ad slot ===== */
+  .ad-slot{
+    background:var(--paper-dim);
+    border:1.5px dashed var(--line);
+    border-radius:var(--radius);
+    margin-bottom:16px;
+    padding:22px 16px;
+    text-align:center;
+  }
+  .ad-label{
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    opacity:0.55;
+    margin-bottom:8px;
+  }
+  .ad-placeholder{
+    font-size:13px;
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+  .ad-sub{
+    font-size:11px;
+    color:var(--ink-soft);
+    opacity:0.7;
+    margin-top:4px;
+  }
+
+  /* ===== Bottom nav ===== */
+  .bottom-nav{
+    position:fixed;
+    bottom:0;left:0;right:0;
+    max-width:430px;
+    margin:0 auto;
+    background:rgba(250,247,240,0.97);
+    backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);
+    display:flex;
+    justify-content:space-around;
+    padding:10px 8px 14px;
+    z-index:40;
+  }
+  .nav-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+    color:var(--ink-soft);
+    font-size:10.5px;
+    font-weight:600;
+    cursor:pointer;
+    flex:1;
+  }
+  .nav-item.active{color:var(--saffron);}
+  .nav-icon{font-size:19px;}
+
+  /* ===== Dashboard view ===== */
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .dash-header{
+    padding:22px 20px 6px;
+  }
+  .dash-title{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:24px;
+    margin:0 0 4px;
+  }
+  .dash-sub{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:0 0 18px;
+  }
+  .stat-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    padding:0 20px;
+  }
+  .stat-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px;
+  }
+  .stat-label{
+    font-size:11px;
+    color:var(--ink-soft);
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  .stat-value{
+    font-family:'Fraunces',serif;
+    font-size:26px;
+    font-weight:700;
+  }
+  .stat-value.teal{color:var(--teal);}
+  .stat-value.saffron{color:var(--saffron);}
+  .stat-delta{
+    font-size:11px;
+    margin-top:4px;
+    color:var(--teal);
+    font-weight:600;
+  }
+
+  .panel{
+    margin:18px 20px 0;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px;
+  }
+  .panel-title{
+    font-size:13px;
+    font-weight:700;
+    margin:0 0 14px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .bar-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .bar-label{
+    font-size:11.5px;
+    width:62px;
+    color:var(--ink-soft);
+    flex-shrink:0;
+  }
+  .bar-track{
+    flex:1;
+    height:9px;
+    background:var(--paper-dim);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .bar-fill{
+    height:100%;
+    border-radius:6px;
+    background:var(--teal);
+  }
+  .bar-val{
+    font-size:11px;
+    font-weight:700;
+    width:32px;
+    text-align:right;
+    flex-shrink:0;
+  }
+
+  .source-note{
+    margin:18px 20px 0;
+    padding:14px 16px;
+    background:var(--teal-dim);
+    border-radius:14px;
+    font-size:12px;
+    color:var(--teal);
+    line-height:1.6;
+    font-weight:500;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===== FEED VIEW ===== -->
+  <div class="view active" id="view-feed">
+    <div class="masthead">
+      <div class="masthead-top">
+        <div class="brand">Mizaaj<span class="brand-dot">.</span></div>
+        <div class="masthead-date" id="dateBox">Loading...</div>
+      </div>
+      <div class="digest-strip">
+        <div class="digest-icon" id="digestIcon">🍳</div>
+        <div class="digest-text" id="digestText">Aaj ka mix taiyar hai</div>
+        <div class="digest-count">12 stories</div>
+      </div>
+    </div>
+
+    <div class="chips">
+      <div class="chip active">Sab</div>
+      <div class="chip">Recipes</div>
+      <div class="chip">Khabrein</div>
+      <div class="chip">Tips</div>
+      <div class="chip">Sehat</div>
+    </div>
+
+    <div class="feed" id="feedContainer"></div>
+  </div>
+
+  <!-- ===== DASHBOARD VIEW ===== -->
+  <div class="view" id="view-dashboard">
+    <div class="dash-header">
+      <div class="dash-title">Dashboard</div>
+      <div class="dash-sub">Aap ki app ki performance, is hafte</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">Aaj ke Views</div>
+        <div class="stat-value">3,214</div>
+        <div class="stat-delta">↑ 8.2% kal se</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ad Impressions</div>
+        <div class="stat-value teal">1,087</div>
+        <div class="stat-delta">↑ 4.5% kal se</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tareeqan Active Users</div>
+        <div class="stat-value">512</div>
+        <div class="stat-delta">↑ 2.1% kal se</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Takreeban Earning</div>
+        <div class="stat-value saffron">Rs. 940</div>
+        <div class="stat-delta">Real AdMob se*</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><span>Content ki kism ka mix</span></div>
+      <div class="bar-row">
+        <div class="bar-label">Recipes</div>
+        <div class="bar-track"><div class="bar-fill" style="width:62%;background:var(--saffron);"></div></div>
+        <div class="bar-val">62%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Khabrein</div>
+        <div class="bar-track"><div class="bar-fill" style="width:24%;"></div></div>
+        <div class="bar-val">24%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Tips</div>
+        <div class="bar-track"><div class="bar-fill" style="width:14%;background:var(--gold);"></div></div>
+        <div class="bar-val">14%</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><span>Top performing post</span></div>
+      <div class="card-title" style="font-size:15px;margin-bottom:4px;">Karachi ki Daal Chawal — 20 Minute Recipe</div>
+      <div class="card-desc" style="margin-bottom:0;">842 views • 96 ad impressions • 4.1 min average time</div>
+    </div>
+
+    <div class="source-note">
+      ⓘ Yeh numbers sample/demo data hain. Real app mein yeh Google AdMob aur Analytics se seedha aayenge jab app publish ho gi.
+    </div>
+  </div>
+
+  <!-- ===== NAV ===== -->
+  <div class="bottom-nav">
+    <div class="nav-item active" data-view="view-feed">
+      <div class="nav-icon">📰</div>
+      <div>Feed</div>
+    </div>
+    <div class="nav-item" data-view="view-dashboard">
+      <div class="nav-icon">📊</div>
+      <div>Dashboard</div>
+    </div>
+    <div class="nav-item" data-view="view-feed">
+      <div class="nav-icon">🔖</div>
+      <div>Saved</div>
+    </div>
+    <div class="nav-item" data-view="view-feed">
+      <div class="nav-icon">👤</div>
+      <div>Profile</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Date
+  const dateBox = document.getElementById('dateBox');
+  const today = new Date();
+  const opts = { weekday:'long', day:'numeric', month:'long' };
+  dateBox.textContent = today.toLocaleDateString('en-GB', opts);
+
+  // Digest icon cycle text
+  const digestStates = [
+    {icon:'🍳', text:'Aaj ka mix taiyar hai'},
+    {icon:'📰', text:'Naye headlines aa gaye'},
+    {icon:'💡', text:'3 nayi tips add hui'}
+  ];
+  let di = 0;
+  setInterval(()=>{
+    di = (di+1) % digestStates.length;
+    document.getElementById('digestIcon').textContent = digestStates[di].icon;
+    document.getElementById('digestText').textContent = digestStates[di].text;
+  }, 4000);
+
+  // Sample mixed content
+  const posts = [
+    {type:'recipe', tag:'Recipe', emoji:'🍛', title:'Karachi ki Daal Chawal — 20 Minute Recipe', desc:'Sirf char ingredients aur ek pateela, dinner ready.', meta:'8 min read • 842 views'},
+    {type:'news', tag:'Khabar', emoji:'📰', title:'PSX mein aaj halki tezi, IT stocks aagey', desc:'Stock market ki taaza update is hafte ke liye.', meta:'3 min read • 1.2k views'},
+    {type:'tip', tag:'Tip', emoji:'💡', title:'Mobile ki battery 2x zyada chalane ka tareeqa', desc:'Yeh 3 settings aaj hi badal lein.', meta:'2 min read • 615 views'},
+    {type:'recipe', tag:'Recipe', emoji:'🫓', title:'Bina Oven Naan — Tawa Method', desc:'Ghar ke tawa par restaurant jaisa naan banayein.', meta:'12 min read • 530 views'},
+    {type:'news', tag:'Khabar', emoji:'🌧️', title:'Karachi mein barish ka alert jaari', desc:'Mausam department ki taaza pesh-goi.', meta:'2 min read • 980 views'},
+    {type:'tip', tag:'Tip', emoji:'🧠', title:'Roz 10 minute padhne ki adat kaise banayein', desc:'Chhoti adatein, bara farq.', meta:'4 min read • 410 views'},
+  ];
+
+  const feedContainer = document.getElementById('feedContainer');
+  posts.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-media ${p.type}">
+        ${p.emoji}
+        <div class="card-tag">${p.tag}</div>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">${p.title}</h3>
+        <p class="card-desc">${p.desc}</p>
+        <div class="card-meta">
+          <div class="card-meta-left">${p.meta}</div>
+          <div>🔖</div>
+        </div>
+      </div>
+    `;
+    feedContainer.appendChild(card);
+
+    // Insert an ad slot after every 2nd post
+    if ((i+1) % 2 === 0) {
+      const ad = document.createElement('div');
+      ad.className = 'ad-slot';
+      ad.innerHTML = `
+        <div class="ad-label">Sponsored</div>
+        <div class="ad-placeholder">Google AdMob Banner yahan aayega</div>
+        <div class="ad-sub">Real app publish hone ke baad yahan asli ad show hogi</div>
+      `;
+      feedContainer.appendChild(ad);
+    }
+  });
+
+  // Nav switching
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      item.classList.add('active');
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(item.dataset.view).classList.add('active');
+    });
+  });
+
+  // Chip switching (visual only in this demo)
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
